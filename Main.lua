@@ -42,7 +42,9 @@ local InCombatLockdown = InCombatLockdown
 local IsInBrawl = C_PvP.IsInBrawl
 local IsInInstance = IsInInstance
 local IsInRaid = IsInRaid
+local UnitInRange = UnitInRange
 local IsItemInRange = IsItemInRange
+local IsSpellInRange = IsSpellInRange
 local IsRatedBattleground = C_PvP.IsRatedBattleground
 local RequestBattlefieldScoreData = RequestBattlefieldScoreData
 local RequestCrowdControlSpell = C_PvP.RequestCrowdControlSpell
@@ -71,6 +73,12 @@ if HasSpeccs then
 	LGIST=LibStub:GetLibrary("LibGroupInSpecT-1.1")
 end
 
+
+local LibRangeCheck = LibStub("LibRangeCheck-3.0")
+
+local function InRange(unit)
+  return LibRangeCheck:GetRange(unit, true);
+end
 
 if not GetUnitName then
 	GetUnitName = function(unit, showServerName)
@@ -520,7 +528,11 @@ do
 			end
 		end
 
-		self:UpdateRange(IsItemInRange(self.config.RangeIndicator_Range, unitID))
+		--self:UpdateRange(IsItemInRange(self.config.RangeIndicator_Range, unitID))
+		--local inRange, checkedRange = UnitInRange(unitID)
+		--self:UpdateRange(inRange)
+		--self:UpdateRange(IsSpellInRange("Smite", unitID))
+		self:UpdateRange(InRange(unitID))
 		self:UpdateTarget()
 	end
 
@@ -700,10 +712,10 @@ do
 
 			self.MyTarget:SetParent(self.healthBar)
 			self.MyTarget:SetPoint("TOPLEFT", self.healthBar, "TOPLEFT")
-			self.MyTarget:SetPoint("BOTTOMRIGHT", self.Power, "BOTTOMRIGHT")
+			self.MyTarget:SetPoint("BOTTOMRIGHT", self.healthBar, "BOTTOMRIGHT")
 			self.MyFocus:SetParent(self.healthBar)
 			self.MyFocus:SetPoint("TOPLEFT", self.healthBar, "TOPLEFT")
-			self.MyFocus:SetPoint("BOTTOMRIGHT", self.Power, "BOTTOMRIGHT")
+			self.MyFocus:SetPoint("BOTTOMRIGHT", self.healthBar, "BOTTOMRIGHT")
 
 			i = i + 1
 
@@ -2477,7 +2489,7 @@ do
 				local myRole
 				if HasSpeccs then
 					if not specCache[self.PlayerDetails.GUID] then
-						BattleGroundEnemies:Information("you don't seem to have a specialization. The testmode requires one.")
+						myRole = "DAMAGER"
 					else
 						myRole = Data.Classes[self.PlayerDetails.PlayerClass][specCache[self.PlayerDetails.GUID]].roledID
 					end
@@ -2838,6 +2850,7 @@ end
 do
 	local TimeSinceLastOnUpdate = 0
 	local UpdatePeroid = 0.1 --update every 0.1 seconds
+	local inRange, checkedRange = 0, 0
 	function BattleGroundEnemies.Allies:RealPlayersOnUpdate(elapsed)
 		--BattleGroundEnemies:Debug("läuft")
 		TimeSinceLastOnUpdate = TimeSinceLastOnUpdate + elapsed
@@ -2846,7 +2859,9 @@ do
 				for name, allyButton in pairs(self.Players) do
 					if allyButton ~= PlayerButton then
 					--BattleGroundEnemies:Debug(IsItemInRange(self.config.RangeIndicator_Range, allyButton.unitID), self.config.RangeIndicator_Range, allyButton.unitID)
-						allyButton:UpdateRange(IsItemInRange(self.config.RangeIndicator_Range, allyButton.unitID))
+						--allyButton:UpdateRange(IsItemInRange(self.config.RangeIndicator_Range, allyButton.unitID))
+						inRange, checkedRange = UnitInRange(allyButton.unitID)
+						allyButton:UpdateRange(inRange)
 					else
 						allyButton:UpdateRange(true)
 					end
