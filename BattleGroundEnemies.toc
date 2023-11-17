@@ -1,13 +1,9 @@
 ## Interface: 100002
-## Interface-Retail: 100002
-## Interface-Classic: 11403
-## Interface-BCC: 20504
-## Interface-Wrath: 30400
 ## Title: BattleGroundEnemies
-## Version: @project-version@
+## Version: 10.0.2.6
 ## Author: Bullsei
 ## SavedVariables: BattleGroundEnemiesDB
-## OptionalDeps: Ace3, LibStub, LibRaces-1.0, UTF8, DRList-1.0, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets
+## OptionalDeps: Ace3, LibStub, LibRaces-1.0, UTF8, DRList-1.0, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, LibRangeCheck-3.0
 
 ## X-Curse-Project-ID: 274066
 ## X-Wago-ID: nQN5aoNB
@@ -16,9 +12,7 @@
 embeds.xml
 #@end-no-lib-strip@
 
-#@retail@
 Libs\LibGroupInSpecT-1.1\lib.xml
-#@end-retail@
 
 Locales.lua
 
